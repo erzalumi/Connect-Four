@@ -1,0 +1,12 @@
+# Node.js files
+node_modules
+*.log
+
+# Generated PNG app icons
+app/assets/icons/png
+
+# Gulp
+dist/
+
+# Private environment variables for deployment
+.env
