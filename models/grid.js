@@ -111,7 +111,50 @@ class Grid {
     }
     return gridScore;
   }
+  
+
+  getScore({ currentPlayer, currentPlayerIsMaxPlayer }) {
+    let gridScore = 0;
+    let c, r;
+    for (c = 0; c < this.columns.length; c += 1) {
+      for (r = 0; r < this.columns[c].length; r += 1) {
+        const chip = this.columns[c][r];
+        if (chip.player !== currentPlayer) {
+          continue;
+        }
+        const score = this.getChipScore({ currentPlayer, currentPlayerIsMaxPlayer, chip });
+        if (Math.abs(score) === Grid.maxScore) {
+          return score;
+        } else {
+          gridScore += score;
+        }
+      }
+    }
+    return gridScore;
+  }
+
+  restoreFromServer({ grid, players }) {
+    const playersByColor = _.indexBy(players, 'color');
+    this.columnCount = grid.columnCount;
+    this.rowCount = grid.rowCount;
+    this.columns = grid.columns.map((column) => {
+      return column.map((chip) => {
+        return new Chip(Object.assign(chip, {
+          player: playersByColor[chip.player]
+        }));
+      });
+    });
+    if (grid.lastPlacedChip) {
+      this.lastPlacedChip = this.columns[grid.lastPlacedChip.column][grid.lastPlacedChip.row];
+    } else {
+      this.lastPlacedChip = null;
+    }
+  }
+
 
 }
+
+Grid.maxScore = Infinity;
+Grid.minScore = -Grid.maxScore;
 
 export default Grid;
