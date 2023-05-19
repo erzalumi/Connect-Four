@@ -1,0 +1,7 @@
+@use '@fontsource/ubuntu/scss/mixins' as Ubuntu;
+
+@include Ubuntu.fontFace(
+  $weight: 400,
+  $display: fallback,
+  $fontDir: '/node_modules/@fontsource/ubuntu/files'
+);

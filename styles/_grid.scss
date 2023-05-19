@@ -1,0 +1,123 @@
+
+#grid {
+  position: relative;
+  padding-top: $chip-size + ($chip-margin * 2);
+  cursor: default;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  @include if-compact-layout() {
+    padding-top: $chip-size-compact + ($chip-margin-compact * 2);
+  }
+}
+#grid-columns {
+  display: flex;
+}
+.grid-column {
+  display: inline-flex;
+  flex-direction: column-reverse;
+  width: $chip-size + ($chip-margin * 2);
+  @include if-compact-layout() {
+    width: $chip-size-compact + ($chip-margin-compact * 2);
+  }
+}
+
+// Chips
+
+.chip-inner,
+.empty-chip-slot-inner {
+  display: block;
+  width: $chip-size;
+  height: $chip-size;
+  margin: $chip-margin;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  @include if-compact-layout() {
+    width: $chip-size-compact;
+    height: $chip-size-compact;
+    margin: $chip-margin-compact;
+  }
+}
+
+.empty-chip-slot-inner {
+  border-color: $empty-chip-slot-border-color;
+  @include dark-mode() {
+    border-color: $empty-chip-slot-border-color-dark;
+  }
+}
+
+@keyframes fade-in-chip {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-chip {
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.chip {
+  @each $player-color-name, $player-color in $player-colors {
+    &.#{$player-color-name} {
+      --chip-background-color-light: #{$player-color};
+      --chip-background-color-dark: #{map-get($player-colors-dark, $player-color-name)};
+      --chip-border-color-light: #{darken($player-color, 10%)};
+      --chip-border-color-dark: #{darken(map-get($player-colors-dark, $player-color-name), 10%)};
+    }
+  }
+  .chip-inner {
+    border-color: var(--chip-border-color-light);
+    background-color: var(--chip-background-color-light);
+    @include dark-mode() {
+      border-color: var(--chip-border-color-dark);
+      background-color: var(--chip-background-color-dark);
+    }
+  }
+  
+  &.pending {
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    z-index: 20;
+    animation: fade-in-chip 100ms ease-in-out forwards;
+    .chip-inner-real {
+      animation: pulse-chip 1000ms ease-in-out infinite forwards;
+    }
+    
+    .chip-inner-clone {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      transition: opacity 500ms ease-in-out;
+    }
+  }
+  &.pending.transition-x {
+    transition: transform 200ms $bounce-transition-timing-function;
+  }
+  &.pending.transition-y {
+    animation: none;
+    transition: transform 500ms $bounce-transition-timing-function;
+    .chip-inner-clone {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes fade-out-chip {
+  100% {
+    opacity: 0.3;
+  }
+}
+
+#game:not(.in-progress) .chip:not(.winning) {
+  animation: fade-out-chip 300ms ease-in-out forwards;
+}

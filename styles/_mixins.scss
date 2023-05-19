@@ -1,0 +1,18 @@
+
+@mixin if-hybrid-layout() {
+  @media (max-width: $page-max-width-hybrid) {
+    @content;
+  }
+}
+
+@mixin if-compact-layout() {
+  @media (max-width: $page-max-width-compact) {
+    @content;
+  }
+}
+
+@mixin dark-mode() {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
