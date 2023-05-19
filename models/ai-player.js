@@ -59,6 +59,45 @@ class AIPlayer extends AsyncPlayer {
     }
     return maxMove;
   }
+  minimizeMove({ grid, minPlayer, depth, alpha, beta }) {
+    const gridScore = grid.getScore({
+      currentPlayer: minPlayer,
+      currentPlayerIsMaxPlayer: false,
+    });
+    if (
+      depth === this.maxComputeDepth ||
+      Math.abs(gridScore) === Grid.maxScore
+    ) {
+      return { column: null, score: gridScore };
+    }
+    const minMove = { column: null, score: Grid.maxScore };
+    for (let c = 0; c < grid.columnCount; c += 1) {
+      if (grid.columns[c].length === grid.rowCount) {
+        continue;
+      }
+      const nextGrid = new Grid(grid);
+      nextGrid.placeChip({
+        column: c,
+        chip: new Chip({ player: minPlayer }),
+      });
+      const maxMove = this.maximizeMove({
+        grid: nextGrid,
+        minPlayer,
+        depth: depth + 1,
+        alpha,
+        beta,
+      });
+      if (maxMove.score < minMove.score) {
+        minMove.column = c;
+        minMove.score = maxMove.score;
+        beta = maxMove.score;
+      }
+      if (alpha >= beta) {
+        break;
+      }
+    }
+    return minMove;
+  }
 }
 
 AIPlayer.prototype.type = 'ai';
