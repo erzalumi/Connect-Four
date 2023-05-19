@@ -1,0 +1,41 @@
+
+body {
+  min-width: $page-min-width-compact;
+  margin: 0;
+  padding: 0;
+  
+  padding-top: 1px;
+  font-family: $sans-serif;
+  text-align: center;
+  overflow-y: scroll;
+  @include dark-mode() {
+    background-color: $app-background-color-dark;
+    color: $app-color-dark;
+  }
+}
+
+main {
+  display: block;
+}
+
+#game {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: $page-max-width-hybrid;
+  margin: 0 auto;
+  margin-top: $page-spacing-top;
+  padding: 0 $page-spacing-x;
+  font-size: 0;
+  @include if-hybrid-layout() {
+    display: inline-block;
+    margin-top: 0;
+    padding: 0;
+    text-align: center;
+  }
+}
+
+a {
+  color: $input-focus-border-color;
+  text-decoration: none;
+}
